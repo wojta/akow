@@ -1,0 +1,2 @@
+include ':example', ':example-test'
+include ':lib'
