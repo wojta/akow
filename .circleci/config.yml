@@ -28,4 +28,4 @@ jobs:
           command: ./gradlew :example:assembleDebug
       - run:
           name: Build example-test
-          command: ./gradlew :example-test:build
+          command: ./gradlew :example-test:assemble
