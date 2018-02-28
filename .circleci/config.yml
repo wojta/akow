@@ -7,6 +7,9 @@ jobs:
     environment:
       JVM_OPTS: -Xmx3200m
     steps:
+      - run:
+          name: Install Emulator
+          command: sdkmanager "system-images;android-25;google_apis;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-25;google_apis;armeabi-v7a"
       - checkout
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}
@@ -33,17 +36,44 @@ jobs:
           name: Install curl
           command: sudo apt-get update && sudo apt-get install -y curl
       - run:
-          name: Install node & appium
+          name: Install nvm
           command: |
               curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
-              export NVM_DIR="$HOME/.nvm"
-              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-              [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-              nvm install v8.9.0
-              npm install -g appium
       - run:
-          name: Enumerate devices
-          command: adb devices
+          name: Launch emulator
+          command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd test -noaudio -no-boot-anim -no-window -accel on
+          background: true
+      - run:
+          name: Wait emulator
+          command: |
+                  # wait for it to have booted
+                  circle-android wait-for-boot
+                  # unlock the emulator screen
+                  sleep 30
+                  adb devices
+                  adb shell input keyevent 82
+      - run:
+          name: Install APK to emulator
+          command: |
+              adb install ~/code/example/build/outputs/apk/debug/example-debug.apk
+      - run:
+          name: Install appium
+          command: |
+               export NVM_DIR="$HOME/.nvm"
+               [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+               [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+               nvm install v8.9.0
+               npm install -g appium
       - run:
           name: Start appium
-          command: nohup appium &
+          command: |
+                export NVM_DIR="$HOME/.nvm"
+                [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+                appium
+          background: true
+      - run:
+          name: Run Tests
+          command: |
+              sleep 10
+              ./gradlew :example-test:test
