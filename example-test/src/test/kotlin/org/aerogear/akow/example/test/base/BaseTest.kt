@@ -1,6 +1,6 @@
-package tests.base
+package org.aerogear.akow.example.test.base
 
-import appium
+import org.aerogear.akow.example.test.appium
 import org.aerogear.akow.test.AkowTest
 import org.junit.runners.Parameterized
 

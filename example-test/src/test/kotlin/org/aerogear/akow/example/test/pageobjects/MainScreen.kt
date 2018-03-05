@@ -1,4 +1,4 @@
-package pageobjects
+package org.aerogear.akow.example.test.pageobjects
 
 import org.aerogear.akow.pageobject.PageObject
 import org.openqa.selenium.WebElement

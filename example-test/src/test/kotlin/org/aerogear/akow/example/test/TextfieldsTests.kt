@@ -1,11 +1,11 @@
-package tests
+package org.aerogear.akow.example.test
 
+import org.aerogear.akow.example.test.base.BaseTest
+import org.aerogear.akow.example.test.pageobjects.MainScreen
+import org.aerogear.akow.example.test.pageobjects.TextFieldsScreen
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import pageobjects.MainScreen
-import pageobjects.TextFieldsScreen
-import tests.base.BaseTest
 import kotlin.test.assertEquals
 
 /**

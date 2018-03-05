@@ -1,7 +1,7 @@
-package pageobjects.android
+package org.aerogear.akow.example.test.pageobjects.android
 
+import org.aerogear.akow.example.test.pageobjects.MainScreen
 import org.aerogear.akow.pageobject.AndroidScreen
-import pageobjects.MainScreen
 
 /**
  * Created on 2/27/18.

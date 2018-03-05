@@ -1,5 +1,7 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
+apply plugin: 'de.fuerstenau.buildconfig'
+
 
 
 dependencies {
@@ -15,6 +17,16 @@ compileTestKotlin {
         jvmTarget = "1.8"
         javaParameters = true   // Useful for reflection.
     }
+}
+
+sourceSets.main.java {
+    srcDir new File(buildDir, 'gen')  //includes buildConfig
+}
+
+buildConfig {
+    packageName = "org.aerogear.akow.example.test"
+    buildConfigField 'String', 'TEST_APK', "$projectDir/../example/build/outputs/apk/debug/app-debug.apk"
+    buildConfigField 'String', 'APPIUM_SERVER_URL', "http://localhost:4723/wd/hub"
 }
 
 sourceCompatibility = "1.8"

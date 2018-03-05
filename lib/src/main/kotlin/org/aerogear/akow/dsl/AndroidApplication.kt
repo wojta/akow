@@ -23,6 +23,8 @@ class AndroidApplication(parent: Node) : Application(parent, "androidApplication
 
     var mainActivity: String? = ""
 
+    var apkPath: String? = ""
+
     init {
         capabilities = AndroidDesiredCapabilities()
     }
