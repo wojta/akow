@@ -19,7 +19,7 @@ apply plugin: 'de.fuerstenau.buildconfig'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation project(':lib')
+    testImplementation project(':akow-lib')
     testCompile "org.jetbrains.kotlin:kotlin-test"
     testCompile "io.appium:java-client:$appium_version"
     testCompile "junit:junit:$junit4_version"
