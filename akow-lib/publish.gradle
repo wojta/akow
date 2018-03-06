@@ -76,6 +76,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
+javadoc.dependsOn dokka
 
 artifacts {
     archives javadocJar
@@ -110,3 +111,4 @@ bintray {
         }
     }
 }
+

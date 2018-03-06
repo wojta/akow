@@ -21,8 +21,11 @@ buildscript {
 }
 
 //<<<--------version change here---------->>>
-version = '0.0.1'
+version = '0.0.2'
 group = "cz.sazel"
+
+
+version = version + (Boolean.valueOf(System.getProperty("snapshot")) ? "-SNAPSHOT" : "")
 
 ext {
     //variables for publish.gradle, https://stackoverflow.com/questions/38211153/distribute-android-library-in-jcenter-to-use-in-gradle#
@@ -55,7 +58,6 @@ apply plugin: 'org.jetbrains.dokka'
 
 //module dependencies
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compileClasspath "io.appium:java-client:$appium_version"

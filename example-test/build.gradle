@@ -19,7 +19,7 @@ apply plugin: 'de.fuerstenau.buildconfig'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation project(':akow-lib')
+    testCompile project(':akow-lib')
     testCompile "org.jetbrains.kotlin:kotlin-test"
     testCompile "io.appium:java-client:$appium_version"
     testCompile "junit:junit:$junit4_version"
@@ -32,15 +32,24 @@ compileTestKotlin {
     }
 }
 
+test {
+    testLogging {
+        // Show that tests are run in the command-line output
+        events 'started', 'passed'
+    }
+}
+test.dependsOn ':example:assembleDebug'
+
 sourceSets.main.java {
     srcDir new File(buildDir, 'gen')  //includes buildConfig
 }
 
 buildConfig {
     packageName = "org.aerogear.akow.example.test"
-    buildConfigField 'String', 'TEST_APK', "$projectDir/../example/build/outputs/apk/debug/app-debug.apk"
+    buildConfigField 'String', 'TEST_APK', "$projectDir/../example/build/outputs/apk/debug/example-debug.apk"
     buildConfigField 'String', 'APPIUM_SERVER_URL', "http://localhost:4723/wd/hub"
 }
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
+
