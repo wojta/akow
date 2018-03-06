@@ -1,2 +1,2 @@
 include ':example', ':example-test'
-include ':lib'
+include ':akow-lib'
