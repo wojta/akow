@@ -5,7 +5,7 @@ buildscript {
     ext.junit4_version = '4.12'
     ext.junit5_version = '5.1.0'
     ext.appium_version = '5.0.4'
-
+    ext.dokka_version="0.9.16"
 
     repositories {
         google()
@@ -18,7 +18,6 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'gradle.plugin.de.fuerstenau:BuildConfigPlugin:1.1.8'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
