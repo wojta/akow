@@ -1,6 +1,8 @@
 package org.aerogear.akow.dsl.base
 
 import io.appium.java_client.AppiumDriver
+import io.appium.java_client.remote.AndroidMobileCapabilityType
+import io.appium.java_client.remote.MobileCapabilityType
 import org.aerogear.akow.dsl.Screens
 
 /**
@@ -47,9 +49,9 @@ abstract class Application(final override var parent: Node, override var nodeNam
     internal open val appiumDesiredCapabilities: org.openqa.selenium.remote.DesiredCapabilities
         get() {
             val desiredCapabilities = AppiumDesiredCapabilities()
-            desiredCapabilities.setCapability("appActivity", appActivity)
-            desiredCapabilities.setCapability("appPackage", appPackage)
-            desiredCapabilities.setCapability("appPath", appPath)
+            desiredCapabilities.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, appActivity)
+            desiredCapabilities.setCapability(AndroidMobileCapabilityType.APP_PACKAGE, appPackage)
+            desiredCapabilities.setCapability(MobileCapabilityType.APP, appPath)
 
             desiredCapabilities.merge(this.capabilities.appiumDesiredCapabilities)
             return desiredCapabilities

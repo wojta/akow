@@ -1,4 +1,4 @@
-package org.aerogear.akow.example.test
+package org.aerogear.akow.example.test.tests
 
 import org.aerogear.akow.example.test.base.BaseTest
 import org.aerogear.akow.example.test.pageobjects.MainScreen
