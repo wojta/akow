@@ -23,11 +23,23 @@ interface PageObject : Node, HasParent {
     val driver: RemoteWebDriver
 
     /**
-     * Deleg
+     * Delegates to finding element by Id.
      */
     fun id(id: String) = object : ReadOnlyProperty<PageObject, DeferredElement> {
         override fun getValue(thisRef: PageObject, property: KProperty<*>) = DeferredElement({ return@DeferredElement thisRef.driver.findElementById(id) })
     }
 
+    /**
+     * Delegates to finding element by XPath. It's not recommended to use this, tell your development team to include id's to make tests less breakable.
+     */
+    fun xpath(path: String) = object : ReadOnlyProperty<PageObject, DeferredElement> {
+        override fun getValue(thisRef: PageObject, property: KProperty<*>) = DeferredElement({ return@DeferredElement thisRef.driver.findElementByXPath(path) })
+    }
+
+
+    /**
+     * Checks screen if exists. For use with [AkowTestContext.maybeOn]. Override it if you want to execute tests on the screen conditionally.
+     */
+    fun checkScreen() = true
 
 }
