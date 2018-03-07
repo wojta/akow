@@ -1,4 +1,4 @@
-## 0.0.5
+## 0.0.6
 fixed test initialization
 ## 0.0.4
 added `maybeOn` to `AkowTestContext` and `checkScreen()` to execute conditionally if screen is visible

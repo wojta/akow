@@ -97,6 +97,7 @@ class AkowTestContext(val application: Application, internal val appium: Appium)
      */
     fun iosOnly(platformSpecific: AkowTestContext.() -> Unit) = platformOnly(MobilePlatform.IOS, platformSpecific)
 
+
     internal fun init() {
         appium.applications.children.filterIsInstance<Application>().forEach {
 

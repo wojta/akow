@@ -34,10 +34,11 @@ abstract class AkowTest(val appium: Appium) {
     @Parameterized.Parameter
     lateinit var application: Application
 
-    private val testContext
+    private val testContext: AkowTestContext
         get() = _testContext
+                ?: throw UninitializedPropertyAccessException("Test context wasn't initialized")
 
-    private lateinit var _testContext: AkowTestContext
+    private var _testContext: AkowTestContext? = null
 
     /**
      * Target platform of current running test, e.g. "Android"
@@ -56,10 +57,12 @@ abstract class AkowTest(val appium: Appium) {
      * Access to Akow DSL context. This allows you to write tests using Akow DSL with page objects pattern.
      */
     fun akow(testContext: AkowTestContext.() -> Unit) {
-        if (!::_testContext.isInitialized) {
+        if (_testContext == null) {
             appiumInit()
         }
         testContext(this.testContext)
+        appiumDestroy()
+
     }
 
     /**
@@ -88,6 +91,7 @@ abstract class AkowTest(val appium: Appium) {
      */
     private fun appiumDestroy() {
         testContext.destroy()
+        _testContext = null
     }
 
 }

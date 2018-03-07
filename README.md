@@ -152,7 +152,7 @@ It's JVM8 based library. It expects to use JUnit4 as test framework for running 
 
 Gradle:
 ```groovy
-compile 'cz.sazel:akow-lib:0.0.5'
+compile 'cz.sazel:akow-lib:0.0.6'
 ```    
   
   
