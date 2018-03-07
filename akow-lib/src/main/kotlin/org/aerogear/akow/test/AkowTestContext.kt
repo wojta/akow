@@ -40,7 +40,7 @@ class AkowTestContext(val application: Application, internal val appium: Appium)
      * @throws NoPageObjectFound
      * @throws MultiplePageObjectsFound
      */
-    inline fun <reified T : PageObject> on(pageObjectContext: T.() -> Unit) {
+    inline fun <reified T : PageObject> on(noinline pageObjectContext: T.() -> Unit) {
         val pageObjects = application.screens.filterIsInstance<T>()
         when (pageObjects.count()) {
             0 -> throw NoPageObjectFound("No page object found for class ${T::class.simpleName}, make sure you added platform specific implementation to the <screens> section")
@@ -50,6 +50,23 @@ class AkowTestContext(val application: Application, internal val appium: Appium)
             else -> throw MultiplePageObjectsFound("There are multiple page objects implementing ${T::class.simpleName}, make sure you added the platform specific implementation to the <screens> " +
                     "section just once")
         }
+    }
+
+    /**
+     * Similar to [on], but checks the screen first by [PageObject.checkScreen], if it throws exception, it won't execute [pageObjectContext].
+     *
+     * @throws NoPageObjectFound
+     * @throws MultiplePageObjectsFound
+     */
+    inline fun <reified T : PageObject> maybeOn(noinline pageObjectContext: T.() -> Unit) {
+        try {
+            on<T> {
+                checkScreen()
+            }
+        } catch (e: Exception) {
+            return
+        }
+        on(pageObjectContext)
     }
 
     /**
