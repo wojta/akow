@@ -21,7 +21,7 @@ buildscript {
 }
 
 //<<<--------version change here---------->>>
-version = '0.0.2'
+version = '0.0.5'
 group = "cz.sazel"
 
 
@@ -62,8 +62,6 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compileClasspath "io.appium:java-client:$appium_version"
     compileClasspath "junit:junit:$junit4_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test"
-    testCompile "org.jetbrains.kotlin:kotlin-test-junit"
 }
 
 //JCenter Maven publish
@@ -97,3 +95,6 @@ compileTestKotlin {
         jvmTarget = "1.8"
     }
 }
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"

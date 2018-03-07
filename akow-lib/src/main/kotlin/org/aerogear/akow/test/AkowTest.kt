@@ -3,8 +3,6 @@ package org.aerogear.akow.test
 import io.appium.java_client.AppiumDriver
 import org.aerogear.akow.dsl.Appium
 import org.aerogear.akow.dsl.base.Application
-import org.junit.After
-import org.junit.Before
 import org.junit.runners.Parameterized
 import java.lang.IllegalArgumentException
 
@@ -58,15 +56,16 @@ abstract class AkowTest(val appium: Appium) {
      * Access to Akow DSL context. This allows you to write tests using Akow DSL with page objects pattern.
      */
     fun akow(testContext: AkowTestContext.() -> Unit) {
+        if (!::_testContext.isInitialized) {
+            appiumInit()
+        }
         testContext(this.testContext)
     }
-
 
     /**
      * Akow test initialization.
      */
-    @Before
-    fun appiumInit() {
+    private fun appiumInit() {
         if (!::application.isInitialized) {
             throw IllegalArgumentException("You'll need to initialize your test with application object. Please use parametrized test and initialize it with your list of applications." +
                     "@RunWith(Parameterized::class)\n" +
@@ -87,8 +86,7 @@ abstract class AkowTest(val appium: Appium) {
     /**
      * Akow test shutdown.
      */
-    @After
-    fun appiumDestroy() {
+    private fun appiumDestroy() {
         testContext.destroy()
     }
 
