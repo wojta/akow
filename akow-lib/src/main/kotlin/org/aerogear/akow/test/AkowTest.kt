@@ -83,6 +83,7 @@ abstract class AkowTest(val appium: Appium) {
                     " ⋮" +
                     "}")
         }
+
         _testContext = AkowTestContext(application, appium).also(AkowTestContext::init)
     }
 

@@ -120,6 +120,8 @@ class AkowTestContext(val application: Application, internal val appium: Appium)
         platformDriverMap.values.forEach {
             it.quit()
         }
+        platformDriverMap.clear()
+        clsDriverMap.clear()
     }
 
 }

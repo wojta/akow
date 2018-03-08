@@ -1,7 +1,6 @@
 package org.aerogear.akow.pageobject
 
 import io.appium.java_client.MobileDriver
-import io.appium.java_client.android.AndroidDriver
 import org.aerogear.akow.dsl.Screens
 import org.aerogear.akow.dsl.base.Application
 import org.aerogear.akow.dsl.base.HasParent
@@ -22,7 +21,8 @@ abstract class AndroidScreen : PageObject, HasParent {
         return@lazy (parent as Screens).parent as Application
     }
 
-    override val driver by lazy { return@lazy application.driver as AndroidDriver<*> }
+    override val driver
+        get() = application.driver
 
     /**
      * Name of the node, currently only for debugging reasons.
