@@ -1,0 +1,100 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+//build script specific dependencies
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
+
+        //publishing plugins
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+    }
+}
+
+//<<<--------version change here---------->>>
+version = '0.0.7'
+group = "cz.sazel"
+
+
+version = version + (Boolean.valueOf(System.getProperty("snapshot")) ? "-SNAPSHOT" : "")
+
+ext {
+    //variables for publish.gradle, https://stackoverflow.com/questions/38211153/distribute-android-library-in-jcenter-to-use-in-gradle#
+    bintrayRepo = 'akow'  // this is the same as whatever you called your repository in Bintray
+    bintrayName = 'akow-lib' // your bintray package name. I am calling it the same as my library name.
+
+    bintrayOrg = "vsazel"
+
+    publishedGroupId = group
+    libraryName = 'akow-lib'
+    artifact = 'akow-lib' // I'm calling it the same as my library name
+
+    libraryDescription = 'Kotlin wrapper for Appium'
+
+    siteUrl = 'https://github.com/aerogear/akow'
+    gitUrl = 'https://github.com/aerogear/akow.git'
+
+    libraryVersion = version
+
+    developerId = 'vsazel' // Maven plugin uses this. I don't know if it needs to be anything special.
+    developerName = 'Vojtech Sazel'
+    developerEmail = 'vojtech@sazel.cz'
+
+    licenseName = 'Apache License, Version 2.0'
+    licenseUrl = 'https://opensource.org/licenses/Apache-2.0'
+    allLicenses = ["Apache-2.0"]
+}
+
+apply plugin: 'org.jetbrains.dokka'
+
+//module dependencies
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    compileClasspath "io.appium:java-client:$appium_version"
+    compileClasspath "junit:junit:$junit4_version"
+}
+
+//JCenter Maven publish
+apply from: 'publish.gradle'
+
+//KDoc
+dokka {
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc"
+    sourceDirs = files('src/main/kotlin')
+}
+
+
+jar {
+    manifest {
+        attributes('Implementation-Title': project.name,
+                'Implementation-Version': project.version)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"

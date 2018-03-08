@@ -1,4 +1,7 @@
 # akow - Kotlin wrapper for Appium
+
+[ ![Download](https://api.bintray.com/packages/vsazel/akow/akow-lib/images/download.svg) ](https://bintray.com/vsazel/akow/akow-lib/_latestVersion)
+
 This library provides a way to write UI based tests especially for mobile platforms (Android and iOS).
 
 It uses Kotlin based DSL (domain specific language) for writing tests without too much boilerplate in comparison with using Appium API directly. 
@@ -148,8 +151,8 @@ class TextfieldsTests : BaseTest() {
 It's JVM8 based library. It expects to use JUnit4 as test framework for running the test.
 
 Gradle:
-```
-TBD
+```groovy
+compile 'cz.sazel:akow-lib:0.0.7'
 ```    
   
   
