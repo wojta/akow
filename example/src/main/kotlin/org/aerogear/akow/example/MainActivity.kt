@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import org.aerogear.akow.example.fragments.AccessorsFragment
 import org.aerogear.akow.example.fragments.TextFieldsFragment
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -58,11 +59,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
-        when (item.itemId) {
-            R.id.nav_textfields -> {
-                supportFragmentManager?.beginTransaction()?.replace(R.id.main_content, TextFieldsFragment())?.commitNow()
-            }
+        val fragment = when (item.itemId) {
+            R.id.nav_textfields -> TextFieldsFragment()
+            R.id.nav_accessors -> AccessorsFragment()
+            else -> throw UnsupportedOperationException("unsupported navigation item")
         }
+
+        supportFragmentManager?.beginTransaction()?.replace(R.id.main_content, fragment)?.commitNow()
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true

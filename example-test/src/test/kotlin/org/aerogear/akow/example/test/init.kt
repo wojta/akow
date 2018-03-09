@@ -1,6 +1,7 @@
 package org.aerogear.akow.example.test
 
 import org.aerogear.akow.dsl.base.appium
+import org.aerogear.akow.example.test.pageobjects.android.AndroidAccessorsScreen
 import org.aerogear.akow.example.test.pageobjects.android.MainAndroidScreen
 import org.aerogear.akow.example.test.pageobjects.android.TextFieldsAndroidScreen
 
@@ -13,6 +14,7 @@ val appium = appium(BuildConfig.APPIUM_SERVER_URL) {
             screens {
                 +MainAndroidScreen()
                 +TextFieldsAndroidScreen()
+                +AndroidAccessorsScreen()
 
             }
         }

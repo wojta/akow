@@ -8,6 +8,10 @@
                 android:id="@+id/nav_textfields"
                 android:icon="@drawable/ic_menu_send"
                 android:title="@string/textfields"/>
+        <item
+            android:id="@+id/nav_accessors"
+            android:icon="@drawable/ic_menu_accessors"
+            android:title="@string/Accessors" />
     </group>
 
 

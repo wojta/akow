@@ -5,16 +5,30 @@ import org.openqa.selenium.*
 
 typealias ElementFindStrategy = () -> WebElement
 
+typealias ElementFindStrategyDesc = Pair<ElementFindStrategy, String>
+
+
 /**
  * This class allows deferred resolution of elements on the page. So they can be passed in arguments.
  */
-class DeferredElement(findStrategy: ElementFindStrategy) : WebElement {
+class DeferredElement(val strategyDesc: ElementFindStrategyDesc) : WebElement {
+
+    private val resetableDelegate = ResetableLazy(strategyDesc.first)
+
+    class DefferredElementException(msg: String, throwable: Throwable) : RuntimeException(msg, throwable)
 
     /**
      * Wrapped element, accessing it will cause it being searched on the page.
      */
-    val element: WebElement by lazy {
-        findStrategy()
+    private val element: WebElement by resetableDelegate
+
+
+    private inline fun <reified T> wrapException(func: () -> T): T {
+        try {
+            return func()
+        } catch (e: Exception) {
+            throw DefferredElementException("${e.message}\nfindStrategy=${strategyDesc.second}", e)
+        }
     }
 
     /**
@@ -23,7 +37,7 @@ class DeferredElement(findStrategy: ElementFindStrategy) : WebElement {
      *
      * @return Whether or not the element is displayed
      */
-    override fun isDisplayed(): Boolean = element.isDisplayed
+    override fun isDisplayed(): Boolean = wrapException { element.isDisplayed }
 
     /**
      * If this element is a text entry element, this will clear the value. Has no effect on other
@@ -35,7 +49,7 @@ class DeferredElement(findStrategy: ElementFindStrategy) : WebElement {
      * you get a change event, consider following with a call to [.sendKeys]
      * with the tab key.
      */
-    override fun clear() = element.clear()
+    override fun clear() = wrapException { element.clear() }
 
     /**
      * If this current element is a form, or an element within a form, then this will be submitted to
@@ -44,14 +58,14 @@ class DeferredElement(findStrategy: ElementFindStrategy) : WebElement {
      *
      * @throws NoSuchElementException If the given element is not within a form
      */
-    override fun submit() = element.submit()
+    override fun submit() = wrapException { element.submit() }
 
     /**
      * Where on the page is the top left-hand corner of the rendered element?
      *
      * @return A point, containing the location of the top left-hand corner of the element
      */
-    override fun getLocation(): Point = element.location
+    override fun getLocation(): Point = wrapException { element.location }
 
     /**
      * Capture the screenshot and store it in the specified location.
@@ -118,7 +132,7 @@ class DeferredElement(findStrategy: ElementFindStrategy) : WebElement {
      * @throws StaleElementReferenceException If the element no
      * longer exists as initially defined
      */
-    override fun click() = element.click()
+    override fun click() = wrapException { element.click() }
 
     /**
      * Get the tag name of this element. **Not** the value of the name attribute: will return
@@ -126,14 +140,14 @@ class DeferredElement(findStrategy: ElementFindStrategy) : WebElement {
      *
      * @return The tag name of this element.
      */
-    override fun getTagName() = element.tagName
+    override fun getTagName() = wrapException { element.tagName }
 
     /**
      * What is the width and height of the rendered element?
      *
      * @return The size of the element on the page.
      */
-    override fun getSize(): Dimension = element.size
+    override fun getSize(): Dimension = wrapException { element.size }
 
     /**
      * Get the visible (i.e. not hidden by CSS) innerText of this element, including sub-elements,
@@ -141,7 +155,7 @@ class DeferredElement(findStrategy: ElementFindStrategy) : WebElement {
      *
      * @return The innerText of this element.
      */
-    override fun getText() = element.text
+    override fun getText(): String = wrapException { element.text }
 
     /**
      * Determine whether or not this element is selected or not. This operation only applies to input
@@ -149,7 +163,7 @@ class DeferredElement(findStrategy: ElementFindStrategy) : WebElement {
      *
      * @return True if the element is currently selected or checked, false otherwise.
      */
-    override fun isSelected() = element.isSelected
+    override fun isSelected() = wrapException { element.isSelected }
 
     /**
      * Is the element currently enabled or not? This will generally return true for everything but
@@ -157,14 +171,14 @@ class DeferredElement(findStrategy: ElementFindStrategy) : WebElement {
      *
      * @return True if the element is enabled, false otherwise.
      */
-    override fun isEnabled() = element.isEnabled
+    override fun isEnabled() = wrapException { element.isEnabled }
 
     /**
      * Use this method to simulate typing into an element, which may set its value.
      *
      * @param keysToSend character sequence to send to the element
      */
-    override fun sendKeys(vararg keysToSend: CharSequence?) = element.sendKeys(*keysToSend)
+    override fun sendKeys(vararg keysToSend: CharSequence?) = wrapException { element.sendKeys(*keysToSend) }
 
     /**
      * Get the value of the given attribute of the element. Will return the current value, even if
@@ -206,12 +220,12 @@ class DeferredElement(findStrategy: ElementFindStrategy) : WebElement {
      * @param name The name of the attribute.
      * @return The attribute/property's current value or null if the value is not set.
      */
-    override fun getAttribute(name: String?) = element.getAttribute(name)
+    override fun getAttribute(name: String): String = wrapException { element.getAttribute(name) }
 
     /**
      * @return The location and size of the rendered element
      */
-    override fun getRect(): Rectangle = element.rect
+    override fun getRect(): Rectangle = wrapException { element.rect }
 
     /**
      * Get the value of a given CSS property.
@@ -229,7 +243,7 @@ class DeferredElement(findStrategy: ElementFindStrategy) : WebElement {
      * @param propertyName the css property name of the element
      * @return The current, computed value of the property.
      */
-    override fun getCssValue(propertyName: String?) = element.getCssValue(propertyName)
+    override fun getCssValue(propertyName: String): String = wrapException { element.getCssValue(propertyName) }
 
     /**
      * Find all elements within the current context using the given mechanism. When using xpath be
@@ -246,7 +260,11 @@ class DeferredElement(findStrategy: ElementFindStrategy) : WebElement {
      *
      * @see org.openqa.selenium.WebDriver.Timeouts
      */
-    override fun <T : WebElement?> findElements(by: By?) = element.findElements<T>(by)
+    override fun <T : WebElement?> findElements(by: By) = element.findElements<T>(by)
 
+    /**
+     * Resets element and forces it to be requeried.
+     */
+    fun requery() = resetableDelegate.reset()
 }
 

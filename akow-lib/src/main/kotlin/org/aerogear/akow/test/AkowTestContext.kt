@@ -45,7 +45,9 @@ class AkowTestContext(val application: Application, internal val appium: Appium)
         when (pageObjects.count()) {
             0 -> throw NoPageObjectFound("No page object found for class ${T::class.simpleName}, make sure you added platform specific implementation to the <screens> section")
             1 -> { //there should be 1:1 between PageObject interfaces and their platform specific implementations
-                pageObjects.first().pageObjectContext()
+                val pageObject = pageObjects.first()
+                pageObject.requery()
+                pageObject.pageObjectContext()
             }
             else -> throw MultiplePageObjectsFound("There are multiple page objects implementing ${T::class.simpleName}, make sure you added the platform specific implementation to the <screens> " +
                     "section just once")

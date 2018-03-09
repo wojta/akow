@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlButtons"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btIdAccessor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/small_padding"
+        android:layout_marginTop="@dimen/small_padding"
+        android:text="@string/idAccessor" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btIdAccessor"
+        android:layout_alignBottom="@+id/btIdAccessor"
+        android:layout_toEndOf="@+id/btIdAccessor"
+        android:text="@string/xpathAccessor" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/btIdAccessor"
+        android:layout_below="@+id/btIdAccessor"
+        android:contentDescription="@string/image_button_with_accessibility"
+        android:src="@drawable/ic_menu_accessors" />
+
+    <Button
+        android:id="@+id/btUiAutomator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btIdAccessor"
+        android:layout_toEndOf="@+id/imageButton"
+        android:text="@string/uiAutomatorAccessor" />
+
+</RelativeLayout>

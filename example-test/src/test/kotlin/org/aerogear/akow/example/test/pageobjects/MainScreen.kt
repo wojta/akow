@@ -10,6 +10,7 @@ interface MainScreen : PageObject {
 
     val navDrawer: WebElement
     val mnuTextFieldsItem: WebElement
+    val mnuAccessors: WebElement
 
     fun selectInNavDrawer(item: WebElement) {
         navDrawer.click()

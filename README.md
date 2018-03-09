@@ -7,7 +7,7 @@ This library provides a way to write UI based tests especially for mobile platfo
 It uses Kotlin based DSL (domain specific language) for writing tests without too much boilerplate in comparison with using Appium API directly. 
 Also use of PageObject pattern makes tests easily maintainable and even multi-platform.
 
-_NOTE: This is a very early development version, use with caution._
+_NOTE: This is a very early development version, use with caution. It currently supports only Android apps._
 
 ## PageObject pattern
 
@@ -152,7 +152,9 @@ It's JVM8 based library. It expects to use JUnit4 as test framework for running 
 
 Gradle:
 ```groovy
-compile 'cz.sazel:akow-lib:0.0.7'
+compile 'cz.sazel:akow-lib:0.0.8'
 ```    
   
-  
+## Changelog
+
+[Check changelog here](CHANGELOG.md)

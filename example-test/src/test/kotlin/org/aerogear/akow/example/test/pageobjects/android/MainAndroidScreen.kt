@@ -8,5 +8,7 @@ import org.aerogear.akow.pageobject.AndroidScreen
  */
 class MainAndroidScreen : AndroidScreen(), MainScreen {
     override val navDrawer by accessibilityId("Open navigation drawer")
-    override val mnuTextFieldsItem by id("org.aerogear.akow.example:id/design_menu_item_text")
+    override val mnuTextFieldsItem by uiAutomator("new UiSelector().text(\"Textfields\")")
+    override val mnuAccessors by uiAutomator("new UiSelector().text(\"Accessors\")")
+
 }

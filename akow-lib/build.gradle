@@ -21,7 +21,7 @@ buildscript {
 }
 
 //<<<--------version change here---------->>>
-version = '0.0.7'
+version = '0.0.8'
 group = "cz.sazel"
 
 
