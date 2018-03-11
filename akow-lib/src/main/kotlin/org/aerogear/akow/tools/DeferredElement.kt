@@ -11,17 +11,15 @@ typealias ElementFindStrategyDesc = Pair<ElementFindStrategy, String>
 /**
  * This class allows deferred resolution of elements on the page. So they can be passed in arguments.
  */
-class DeferredElement(val strategyDesc: ElementFindStrategyDesc) : WebElement {
-
-    private val resetableDelegate = ResetableLazy(strategyDesc.first)
+class DeferredElement(private val strategyDesc: ElementFindStrategyDesc) : WebElement {
 
     class DefferredElementException(msg: String, throwable: Throwable) : RuntimeException(msg, throwable)
 
     /**
      * Wrapped element, accessing it will cause it being searched on the page.
      */
-    private val element: WebElement by resetableDelegate
-
+    private val element: WebElement
+        get() = strategyDesc.first()
 
     private inline fun <reified T> wrapException(func: () -> T): T {
         try {
@@ -262,9 +260,5 @@ class DeferredElement(val strategyDesc: ElementFindStrategyDesc) : WebElement {
      */
     override fun <T : WebElement?> findElements(by: By) = element.findElements<T>(by)
 
-    /**
-     * Resets element and forces it to be requeried.
-     */
-    fun requery() = resetableDelegate.reset()
 }
 

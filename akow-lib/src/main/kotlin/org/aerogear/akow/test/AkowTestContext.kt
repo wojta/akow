@@ -3,6 +3,7 @@ package org.aerogear.akow.test
 import io.appium.java_client.AppiumDriver
 import io.appium.java_client.MobileElement
 import io.appium.java_client.android.AndroidDriver
+import io.appium.java_client.remote.MobileCapabilityType
 import io.appium.java_client.remote.MobilePlatform
 import org.aerogear.akow.dsl.AndroidApplication
 import org.aerogear.akow.dsl.Appium
@@ -12,7 +13,10 @@ import org.aerogear.akow.exceptions.MultiplePageObjectsFound
 import org.aerogear.akow.exceptions.NoPageObjectFound
 import org.aerogear.akow.pageobject.AndroidScreen
 import org.aerogear.akow.pageobject.PageObject
+import org.openqa.selenium.WebDriverException
 import org.openqa.selenium.WebElement
+import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.remote.DesiredCapabilities
 import java.net.URL
 import kotlin.reflect.KClass
 
@@ -46,7 +50,6 @@ class AkowTestContext(val application: Application, internal val appium: Appium)
             0 -> throw NoPageObjectFound("No page object found for class ${T::class.simpleName}, make sure you added platform specific implementation to the <screens> section")
             1 -> { //there should be 1:1 between PageObject interfaces and their platform specific implementations
                 val pageObject = pageObjects.first()
-                pageObject.requery()
                 pageObject.pageObjectContext()
             }
             else -> throw MultiplePageObjectsFound("There are multiple page objects implementing ${T::class.simpleName}, make sure you added the platform specific implementation to the <screens> " +
@@ -101,11 +104,30 @@ class AkowTestContext(val application: Application, internal val appium: Appium)
 
 
     internal fun init() {
+
+        fun androidDriverInit(desiredCapabilities: DesiredCapabilities) =
+                try {
+                    AndroidDriver<MobileElement>(URL(appium.serverPath), desiredCapabilities)
+                } catch (e: WebDriverException) {
+                    if (desiredCapabilities.getCapability(MobileCapabilityType.APP) != null) {
+                        desiredCapabilities.setCapability(MobileCapabilityType.APP, null as String?)
+                        AndroidDriver<MobileElement>(URL(appium.serverPath), desiredCapabilities)
+                    } else throw e
+                }
+
+
         appium.applications.children.filterIsInstance<Application>().forEach {
 
             when (it) {
                 is AndroidApplication -> {
-                    val driver = AndroidDriver<MobileElement>(URL(appium.serverPath), it.appiumDesiredCapabilities)
+                    var driver = androidDriverInit(it.appiumDesiredCapabilities)
+                    if (it.appiumDesiredCapabilities.getCapability(ChromeOptions.CAPABILITY) != null) {
+                        val caps = it.appiumDesiredCapabilities
+                        caps.setCapability(ChromeOptions.CAPABILITY, null as Any?)
+                        caps.setCapability(MobileCapabilityType.BROWSER_NAME, null as Any?)
+                        driver.quit()
+                        driver = androidDriverInit(caps)
+                    }
                     platformDriverMap[MobilePlatform.ANDROID] = driver
                     clsDriverMap[AndroidDriver::class] = driver
                     it.driver = driver

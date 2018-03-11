@@ -7,9 +7,9 @@ import org.aerogear.akow.example.test.pageobjects.android.TextFieldsAndroidScree
 
 val appium = appium(BuildConfig.APPIUM_SERVER_URL) {
     applications {
-        androidAPKApplication(BuildConfig.TEST_APK, "org.aerogear.akow.example") {
-            //androidApplication("org.aerogear.akow.example", ".MainActivity") {
+        androidAPKApplication(BuildConfig.TEST_APK, "org.aerogear.akow.example", ".MainActivity") {
             capabilities {
+                chromeOptions.addArguments("--no-first-run")
             }
             screens {
                 +MainAndroidScreen()

@@ -21,8 +21,9 @@ class Applications(override var parent: Node) : BaseNode("applications") {
     /**
      * Adds Android application with [packageName] APK on [apkPath] to be tested. App will be installed on the device first.
      */
-    fun androidAPKApplication(apkPath: String?, packageName: String, init: AndroidApplication.() -> Unit) = AndroidApplication(this).also {
+    fun androidAPKApplication(apkPath: String?, packageName: String, activity: String, init: AndroidApplication.() -> Unit) = AndroidApplication(this).also {
         it.appPackage = packageName
+        it.appActivity = activity
         it.appPath = apkPath
     }.addAsChild(this, init)
 

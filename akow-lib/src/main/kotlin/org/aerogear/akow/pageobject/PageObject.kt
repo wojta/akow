@@ -10,6 +10,9 @@ import org.openqa.selenium.remote.RemoteWebDriver
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
+
+typealias Accessor = ReadOnlyProperty<PageObject, DeferredElement>
+
 /**
  * Interface for implementing platform-independent page objects.
  */
@@ -26,22 +29,22 @@ interface PageObject : Node, HasParent {
     /**
      * Delegates to finding element by Id.
      */
-    fun id(id: String): Lazy<DeferredElement>
+    fun id(id: String): Accessor
 
     /**
      * Delegates to finding element by XPath. It's not recommended to use this, tell your development team to include id's to make tests less breakable.
      */
-    fun xpath(path: String): Lazy<DeferredElement>
+    fun xpath(path: String): Accessor
 
     /**
      * Delegates to finding element by multiple strategies. Next are used as a fallback in case that other fails.
      * Use with caution, this can make your test slow.
      */
-    fun multiple(vararg strategies: Lazy<DeferredElement>) = object : ReadOnlyProperty<PageObject, DeferredElement> {
+    fun multiple(vararg strategies: Accessor) = object : Accessor {
         override fun getValue(thisRef: PageObject, property: KProperty<*>): DeferredElement {
             strategies.forEach {
                 try {
-                    val el = it.value
+                    val el = it.getValue(thisRef, property)
                     el.location
                     return el
                 } catch (e: Exception) {
@@ -56,10 +59,4 @@ interface PageObject : Node, HasParent {
      */
     fun checkScreen() = true
 
-
-    /**
-     * Resets page object and forces all elements to be requeried.
-     * @return itself
-     */
-    fun requery(): PageObject
 }

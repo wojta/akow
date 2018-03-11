@@ -1,8 +1,11 @@
 package org.aerogear.akow.dsl
 
+import io.appium.java_client.remote.AndroidMobileCapabilityType
+import io.appium.java_client.remote.MobileCapabilityType
 import io.appium.java_client.remote.MobilePlatform
 import org.aerogear.akow.dsl.base.AppiumDesiredCapabilities
 import org.aerogear.akow.dsl.base.DesiredCapabilities
+import org.openqa.selenium.chrome.ChromeOptions
 
 
 /**
@@ -16,11 +19,12 @@ class AndroidDesiredCapabilities : DesiredCapabilities(MobilePlatform.ANDROID) {
     override val appiumDesiredCapabilities: AppiumDesiredCapabilities
         get() {
             val caps = AppiumDesiredCapabilities()
-            caps.setCapability("appActivity", appActivity)
+            caps.setCapability(AndroidMobileCapabilityType.APP_ACTIVITY, appActivity)
             caps.setCapability("deviceName", deviceName)
             caps.setCapability("language", language)
             caps.setCapability("locale", locale)
-            caps.setCapability("noReset", noReset)
+            caps.setCapability(MobileCapabilityType.NO_RESET, noReset)
+            if (chromeOptionsInitializer.isInitialized()) caps.setCapability(AndroidMobileCapabilityType.CHROME_OPTIONS, chromeOptions)
             return caps
         }
 
@@ -57,6 +61,13 @@ class AndroidDesiredCapabilities : DesiredCapabilities(MobilePlatform.ANDROID) {
      */
     var noReset: Boolean? = null
 
-    //TODO add more capabilities
+    private val chromeOptionsInitializer = lazy {
+        ChromeOptions()
+    }
 
+    /**
+     * Chrome options
+     * [see docs](https://sites.google.com/a/chromium.org/chromedriver/capabilities)
+     */
+    val chromeOptions: ChromeOptions by chromeOptionsInitializer
 }

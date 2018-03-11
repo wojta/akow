@@ -1,3 +1,5 @@
+## 0.0.9
+* added support for passing `chromeOptions` in device capabilities
 ## 0.0.8
 * added `uiselector()` for Android
 * added `multiple()` selector
